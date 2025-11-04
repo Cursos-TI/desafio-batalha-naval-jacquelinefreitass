@@ -1,0 +1,73 @@
+#include <stdio.h>
+
+#define TAMANHO_TABULEIRO 10
+#define TAMANHO_NAVIO 3
+
+#define AGUA 0
+#define NAVIO 3 
+
+int main() {
+
+    int tabuleiro[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO];
+    int i, j;
+
+    printf("Inicializando o tabuleiro 10x10 com água (%d)...\n", AGUA);
+    for (i = 0; i < TAMANHO_TABULEIRO; i++) {
+        for (j = 0; j < TAMANHO_TABULEIRO; j++) {
+            tabuleiro[i][j] = AGUA;
+        }
+    }
+
+    int navio_modelo[TAMANHO_NAVIO] = {NAVIO, NAVIO, NAVIO};
+
+    int navio1_linha_inicio = 2; 
+    int navio1_coluna_inicio = 3; 
+    
+    if ((navio1_coluna_inicio + TAMANHO_NAVIO) > TAMANHO_TABULEIRO) {
+        printf("Erro: Navio 1 (Horizontal) está fora dos limites!\n");
+        return 1; 
+    }
+
+    for (j = 0; j < TAMANHO_NAVIO; j++) {
+        tabuleiro[navio1_linha_inicio][navio1_coluna_inicio + j] = navio_modelo[j];
+    }
+    printf("Navio 1 (Horizontal) posicionado.\n");
+
+    int navio2_linha_inicio = 5; 
+    int navio2_coluna_inicio = 7; 
+    
+    if ((navio2_linha_inicio + TAMANHO_NAVIO) > TAMANHO_TABULEIRO) {
+        printf("Erro: Navio 2 (Vertical) está fora dos limites!\n");
+        return 1; 
+    }
+
+    int sobreposicao = 0; 
+    for (i = 0; i < TAMANHO_NAVIO; i++) {
+        if (tabuleiro[navio2_linha_inicio + i][navio2_coluna_inicio] == NAVIO) {
+            sobreposicao = 1; 
+            break; 
+        }
+    }
+
+    if (sobreposicao == 1) {
+        printf("Erro: Navio 2 (Vertical) está sobrepondo o Navio 1!\n");
+        return 1; 
+    }
+
+    for (i = 0; i < TAMANHO_NAVIO; i++) {
+        tabuleiro[navio2_linha_inicio + i][navio2_coluna_inicio] = navio_modelo[i];
+    }
+    printf("Navio 2 (Vertical) posicionado.\n\n");
+
+    printf("--- Tabuleiro Batalha Naval (10x10) ---\n");
+    for (i = 0; i < TAMANHO_TABULEIRO; i++) { 
+        for (j = 0; j < TAMANHO_TABULEIRO; j++) { 
+            printf("%d ", tabuleiro[i][j]);
+        }
+        printf("\n");
+    }
+
+    printf("\nLegenda: %d = Água | %d = Navio\n", AGUA, NAVIO);
+
+    return 0; 
+}
