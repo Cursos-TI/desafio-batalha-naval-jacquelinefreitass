@@ -1,0 +1,122 @@
+#include <stdio.h>
+
+#define TAMANHO_TABULEIRO 10
+#define TAMANHO_NAVIO 3
+
+#define AGUA 0
+#define NAVIO 3 
+
+#define HORIZONTAL 0
+#define VERTICAL 1
+#define DIAG_DESCENDO_DIREITA 2
+#define DIAG_SUBINDO_DIREITA 3
+
+int posicionarNavio(int tab[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO], int linha, int coluna, int tamanho, int orientacao);
+void exibirTabuleiro(int tab[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO]);
+
+int main() {
+
+    int tabuleiro[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO];
+    int i, j;
+
+    for (i = 0; i < TAMANHO_TABULEIRO; i++) {
+        for (j = 0; j < TAMANHO_TABULEIRO; j++) {
+            tabuleiro[i][j] = AGUA;
+        }
+    }
+
+    printf("Posicionando navios...\n");
+
+    if (!posicionarNavio(tabuleiro, 1, 1, TAMANHO_NAVIO, HORIZONTAL)) {
+        printf("Erro: Não foi possível posicionar o Navio 1 (Horizontal).\n");
+    }
+
+    if (!posicionarNavio(tabuleiro, 3, 8, TAMANHO_NAVIO, VERTICAL)) {
+        printf("Erro: Não foi possível posicionar o Navio 2 (Vertical).\n");
+    }
+
+    if (!posicionarNavio(tabuleiro, 3, 1, TAMANHO_NAVIO, DIAG_DESCENDO_DIREITA)) {
+        printf("Erro: Não foi possível posicionar o Navio 3 (Diagonal DR).\n");
+    }
+    
+    if (!posicionarNavio(tabuleiro, 8, 4, TAMANHO_NAVIO, DIAG_SUBINDO_DIREITA)) {
+        printf("Erro: Não foi possível posicionar o Navio 4 (Diagonal UR).\n");
+    }
+    
+    printf("Navios posicionados.\n\n");
+
+    exibirTabuleiro(tabuleiro);
+    
+    printf("\nLegenda: %d = Água | %d = Navio\n", AGUA, NAVIO);
+
+    return 0; 
+}
+
+void exibirTabuleiro(int tab[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO]) {
+    printf("--- Tabuleiro Batalha Naval (10x10) ---\n");
+    
+    printf("  "); 
+    for(int k=0; k < TAMANHO_TABULEIRO; k++) {
+        printf("%d ", k);
+    }
+    printf("\n");
+
+    for (int i = 0; i < TAMANHO_TABULEIRO; i++) { 
+        printf("%d ", i); 
+        for (int j = 0; j < TAMANHO_TABULEIRO; j++) { 
+            printf("%d ", tab[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+int posicionarNavio(int tab[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO], int linha, int coluna, int tamanho, int orientacao) {
+    
+    int i;
+    
+    for (i = 0; i < tamanho; i++) {
+        int l = linha; 
+        int c = coluna; 
+        
+        if (orientacao == HORIZONTAL) {
+            c += i;
+        } else if (orientacao == VERTICAL) {
+            l += i;
+        } else if (orientacao == DIAG_DESCENDO_DIREITA) {
+            l += i;
+            c += i;
+        } else if (orientacao == DIAG_SUBINDO_DIREITA) {
+            l -= i; 
+            c += i; 
+        }
+        
+        if (l < 0 || l >= TAMANHO_TABULEIRO || c < 0 || c >= TAMANHO_TABULEIRO) {
+            return 0; 
+        }
+        
+        if (tab[l][c] == NAVIO) {
+            return 0; 
+        }
+    }
+    
+    for (i = 0; i < tamanho; i++) {
+        int l = linha;
+        int c = coluna;
+        
+        if (orientacao == HORIZONTAL) {
+            c += i;
+        } else if (orientacao == VERTICAL) {
+            l += i;
+        } else if (orientacao == DIAG_DESCENDO_DIREITA) {
+            l += i;
+            c += i;
+        } else if (orientacao == DIAG_SUBINDO_DIREITA) {
+            l -= i;
+            c += i;
+        }
+        
+        tab[l][c] = NAVIO;
+    }
+    
+    return 1; 
+}
